@@ -1,3 +1,4 @@
+from sys import stdin, stdout
 import math
 import random
  
@@ -45,8 +46,40 @@ class LCA:
         self.rmq = RMQ(a)
         self.mn = mn
         self.mx = mx
+    
     def lca(self, v1, v2):
         if self.mn[v1] < self.mx[v2]:
             return self.rmq.min(self.mn[v1], self.mx[v2])[1]
         else:
-            return self.rmq.min(self.mn[v2], self.mx[v1])[1]        
+            return self.rmq.min(self.mn[v2], self.mx[v1])[1]
+    
+    def list_of_edges(n, v):
+        g = []
+        for i in range(n):
+            g.append([])
+        for i in range(n - 1):
+            l = int(v[i][0])
+            r = int(v[i][1])
+            g[l].append(r)
+            g[r].append(l)
+        
+        return g
+
+if __name__ == "__main__":
+    n = int(stdin.readline())
+    root = int(stdin.readline())
+    g = []
+    for i in range(n):
+        g.append([])
+    for i in range(n - 1):
+        l, r = stdin.readline().split()
+        l = int(l)
+        r = int(r)
+        g[l].append(r)
+        g[r].append(l)
+        
+    lca = LCA(g, root)
+ 
+    for i in stdin:
+        l, r = i.split()
+        print(lca.lca(int(l), int(r)))
