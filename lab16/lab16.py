@@ -20,9 +20,13 @@ class WeightedGraph:
         v = self.v_to_id[v]
         d = []
         f = []
+        par = []
+        path = []
         for i in range(len(self.g)):
             d.append(1000000000000000000)
             f.append(True)
+            par.append(-1)
+            path.append([])
         d[v] = 0
         q = []
         heapq.heappush(q, (0, v))
@@ -31,11 +35,17 @@ class WeightedGraph:
             if f[a] == False:
                 continue;
             f[a] = False
+            path[a] = path[par[a]] + [a]
             for b, ab in self.g[a]:
                 if d[b] > d[a] + ab:
                     d[b] = d[a] + ab
                     heapq.heappush(q, (d[b], b))
+                    par[b] = a
+ 
         res = {}
         for i in range(len(d)):
-            res[self.id_to_v[i]] = d[i]
+            p = []
+            for j in path[i]:
+                p.append(self.id_to_v[j])
+            res[self.id_to_v[i]] = p
         return res
